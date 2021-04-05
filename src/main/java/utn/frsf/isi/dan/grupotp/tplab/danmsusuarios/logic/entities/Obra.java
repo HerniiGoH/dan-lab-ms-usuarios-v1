@@ -1,5 +1,7 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.logic.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 public class Obra {
     private Integer id;
     private String descripcion;
@@ -8,9 +10,10 @@ public class Obra {
     private String direccion;
     private Integer superficie;
     private TipoObra TipoipoObra;
-    private Integer idCliente;
+    @JsonManagedReference
+    private Cliente cliente;
 
-    public Obra(Integer id, String descripcion, Float latitud, Float longitud, String direccion, Integer superficie, TipoObra tipoipoObra, Integer idCliente) {
+    public Obra(Integer id, String descripcion, Float latitud, Float longitud, String direccion, Integer superficie, TipoObra tipoipoObra, Cliente cliente) {
         this.id = id;
         this.descripcion = descripcion;
         this.latitud = latitud;
@@ -18,7 +21,7 @@ public class Obra {
         this.direccion = direccion;
         this.superficie = superficie;
         TipoipoObra = tipoipoObra;
-        this.idCliente = idCliente;
+        this.cliente = cliente;
     }
 
     public Obra() {
@@ -80,11 +83,11 @@ public class Obra {
         TipoipoObra = tipoipoObra;
     }
 
-    public Integer getIdCliente() {
-        return idCliente;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 }

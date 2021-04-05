@@ -61,7 +61,7 @@ public class ObraRest {
             @ApiResponse(code = 403, message = "Prohibido"),
             @ApiResponse(code = 404, message = "Error al ingresar los criterios de busqueda")
     })
-    public ResponseEntity<List<Obra>> buscarObra(@RequestParam(required = false, name = "id") Integer id, @RequestParam(required = false, name = "descripcion") String descripcion, @RequestParam(required = false, name = "latitud") Float latitud, @RequestParam(required = false, name = "longitud") Float longitud, @RequestParam(required = false, name = "direccion") String direccion, @RequestParam(required = false, name = "superficie") Integer superficie, @RequestBody(required = false) TipoObra tipoObra, @RequestParam(required = false, name = "idCliente") Integer idCliente){
+    public ResponseEntity<List<Obra>> buscarObra(@RequestParam(required = false, name = "id") Integer id, @RequestParam(required = false, name = "descripcion") String descripcion, @RequestParam(required = false, name = "latitud") Float latitud, @RequestParam(required = false, name = "longitud") Float longitud, @RequestParam(required = false, name = "direccion") String direccion, @RequestParam(required = false, name = "superficie") Integer superficie, @RequestBody(required = false) TipoObra tipoObra, @RequestBody(required = false) Cliente cliente){
         Optional<List<Obra>> listaObrasEncontradas = Optional.of(listaObras
             .stream()
             .filter(obra -> id==null || obra.getId().equals(id))
@@ -71,7 +71,7 @@ public class ObraRest {
             .filter(obra -> direccion==null || obra.getDireccion().equalsIgnoreCase(direccion))
             .filter(obra -> superficie==null || obra.getSuperficie().equals(superficie))
             .filter(obra -> tipoObra==null || obra.getTipoipoObra().equals(tipoObra))
-            .filter(obra -> idCliente==null || obra.getIdCliente().equals(idCliente))
+            .filter(obra -> cliente==null || obra.getCliente().equals(cliente))
             .collect(Collectors.toList()));
         return ResponseEntity.of(listaObrasEncontradas);
     }

@@ -1,6 +1,9 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.logic.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.List;
+import java.util.Objects;
 
 public class Cliente {
     private Integer id;
@@ -10,6 +13,7 @@ public class Cliente {
     private Double maxCuentaCorriente;
     private Boolean habilitadoOnline;
     private Usuario usuario;
+    @JsonBackReference
     private List<Obra> obras;
 
     public Cliente(Integer id, String razonSocial, String cuit, String mail, Double maxCuentaCorriente, Boolean habilitadoOnline, Usuario usuario, List<Obra> obras) {
@@ -88,5 +92,18 @@ public class Cliente {
 
     public void setObras(List<Obra> obras) {
         this.obras = obras;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cliente cliente = (Cliente) o;
+        return Objects.equals(getId(), cliente.getId()) && Objects.equals(getRazonSocial(), cliente.getRazonSocial()) && Objects.equals(getCuit(), cliente.getCuit()) && Objects.equals(getMail(), cliente.getMail()) && Objects.equals(getMaxCuentaCorriente(), cliente.getMaxCuentaCorriente()) && Objects.equals(getHabilitadoOnline(), cliente.getHabilitadoOnline()) && Objects.equals(getUsuario(), cliente.getUsuario());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getRazonSocial(), getCuit(), getMail(), getMaxCuentaCorriente(), getHabilitadoOnline(), getUsuario());
     }
 }
