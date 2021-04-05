@@ -33,7 +33,8 @@ pipeline {
                 bat "./mvnw site"
                 bat "./mvnw checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs spotbugs:spotbugs"
             }
-        }stage('reportes') {
+        }
+        stage('reportes') {
             steps {
                 publishHTML([allowMissing: false,
                              alwaysLinkToLastBuild: true,
