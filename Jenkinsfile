@@ -33,7 +33,19 @@ pipeline {
                 bat "./mvnw site"
                 bat "./mvnw checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs spotbugs:spotbugs"
             }
+        }stage('reportes') {
+            steps {
+                publishHTML([allowMissing: false,
+                             alwaysLinkToLastBuild: true,
+                             keepAll: true,
+                             reportDir: 'target/site',
+                             reportFiles: 'index.html',
+                             reportName: 'Site'
+                ])
+                step([$class: 'CordellWalkerRecorder'])
+            }
         }
+
     }
     post {
         success{
