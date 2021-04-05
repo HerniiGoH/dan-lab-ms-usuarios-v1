@@ -9,18 +9,18 @@ public class Obra {
     private Float longitud;
     private String direccion;
     private Integer superficie;
-    private TipoObra TipoipoObra;
+    private TipoObra tipoObra;
     @JsonManagedReference
     private Cliente cliente;
 
-    public Obra(Integer id, String descripcion, Float latitud, Float longitud, String direccion, Integer superficie, TipoObra tipoipoObra, Cliente cliente) {
+    public Obra(Integer id, String descripcion, Float latitud, Float longitud, String direccion, Integer superficie, TipoObra tipoObra, Cliente cliente) {
         this.id = id;
         this.descripcion = descripcion;
         this.latitud = latitud;
         this.longitud = longitud;
         this.direccion = direccion;
         this.superficie = superficie;
-        TipoipoObra = tipoipoObra;
+        this.tipoObra = tipoObra;
         this.cliente = cliente;
     }
 
@@ -75,12 +75,12 @@ public class Obra {
         this.superficie = superficie;
     }
 
-    public TipoObra getTipoipoObra() {
-        return TipoipoObra;
+    public TipoObra getTipoObra() {
+        return tipoObra;
     }
 
-    public void setTipoipoObra(TipoObra tipoipoObra) {
-        TipoipoObra = tipoipoObra;
+    public void setTipoObra(TipoObra tipoObra) {
+        this.tipoObra = tipoObra;
     }
 
     public Cliente getCliente() {

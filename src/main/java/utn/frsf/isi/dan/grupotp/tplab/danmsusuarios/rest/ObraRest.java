@@ -70,7 +70,7 @@ public class ObraRest {
             .filter(obra -> longitud==null || obra.getLongitud().equals(longitud))
             .filter(obra -> direccion==null || obra.getDireccion().equalsIgnoreCase(direccion))
             .filter(obra -> superficie==null || obra.getSuperficie().equals(superficie))
-            .filter(obra -> tipoObra==null || obra.getTipoipoObra().equals(tipoObra))
+            .filter(obra -> tipoObra==null || obra.getTipoObra().equals(tipoObra))
             .filter(obra -> cliente==null || obra.getCliente().equals(cliente))
             .collect(Collectors.toList()));
         return ResponseEntity.of(listaObrasEncontradas);
