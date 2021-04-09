@@ -12,12 +12,7 @@ import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Obra;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.TipoObra;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.ObraService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("/api/obra")

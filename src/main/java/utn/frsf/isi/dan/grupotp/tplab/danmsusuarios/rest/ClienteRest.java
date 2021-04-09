@@ -10,18 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Cliente;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.ClienteService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("/api/cliente")
 @Api(value="ClienteRest", description = "Permite gestionar los clientes de la empresa")
 public class ClienteRest {
-
     @Autowired
     ClienteService clienteService;
 

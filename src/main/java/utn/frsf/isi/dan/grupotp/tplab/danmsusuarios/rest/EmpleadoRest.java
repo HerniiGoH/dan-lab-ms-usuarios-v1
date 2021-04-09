@@ -10,18 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Empleado;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.EmpleadoService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("/api/empleado")
 @Api(value = "EmpleadoRest", description = "Permite gestionar los empleados de la empresa")
 public class EmpleadoRest {
-
     @Autowired
     EmpleadoService empleadoService;
 
