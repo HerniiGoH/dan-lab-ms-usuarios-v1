@@ -4,9 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.logic.entities.Cliente;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Cliente;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.ClienteService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,9 @@ import java.util.stream.IntStream;
 @RequestMapping("/api/cliente")
 @Api(value="ClienteRest", description = "Permite gestionar los clientes de la empresa")
 public class ClienteRest {
+
+    @Autowired
+    ClienteService clienteService;
     //lista de los clientes creados
     private static final List<Cliente> listaClientes = new ArrayList<>();
     //generador de los id de los clientes

@@ -1,4 +1,4 @@
-package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.logic.entities;
+package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model;
 
 public class Usuario {
     private Integer id;

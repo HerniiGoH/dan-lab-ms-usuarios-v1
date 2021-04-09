@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.logic.entities.Cliente;
-import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.logic.entities.Obra;
-import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.logic.entities.TipoObra;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Cliente;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Obra;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.TipoObra;
 
 import java.util.ArrayList;
 import java.util.List;
