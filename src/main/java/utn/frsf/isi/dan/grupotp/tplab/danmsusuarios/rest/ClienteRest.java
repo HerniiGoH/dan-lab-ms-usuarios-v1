@@ -25,7 +25,6 @@ public class ClienteRest {
     @Autowired
     ClienteService clienteService;
 
-
     @GetMapping
     @ApiOperation(value = "Devuelve la lista completa de clientes")
     @ApiResponses(value = {

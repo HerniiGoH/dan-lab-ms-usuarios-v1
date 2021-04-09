@@ -4,9 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Empleado;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.EmpleadoService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +21,9 @@ import java.util.stream.IntStream;
 @RequestMapping("/api/empleado")
 @Api(value = "EmpleadoRest", description = "Permite gestionar los empleados de la empresa")
 public class EmpleadoRest {
-    //lista de los empleados creados
-    private static final List<Empleado> listaEmpleados = new ArrayList<Empleado>();
-    //generador de los id de los empleados
-    private static Integer SEQ_ID = 0;
+
+    @Autowired
+    EmpleadoService empleadoService;
 
     @GetMapping
     @ApiOperation(value = "Devuelve la lista completa de empleados")
@@ -32,7 +33,7 @@ public class EmpleadoRest {
             @ApiResponse(code = 403, message = "Prohibido")
     })
     public ResponseEntity<List<Empleado>> buscarTodos(){
-        return ResponseEntity.ok(listaEmpleados);
+        return ResponseEntity.ok(empleadoService.buscarTodos());
     }
 
     @GetMapping("/{id}")
@@ -44,11 +45,7 @@ public class EmpleadoRest {
             @ApiResponse(code = 404, message = "El ID no existe")
     })
     public ResponseEntity<Empleado> buscarEmpleadoPorId(@PathVariable Integer id){
-        Optional<Empleado> empleadoEncontrado = listaEmpleados
-                .stream()
-                .filter(empleado_aux -> empleado_aux.getId().equals(id))
-                .findFirst();
-        return ResponseEntity.of(empleadoEncontrado);
+        return ResponseEntity.of(empleadoService.buscarEmpleadoPorId(id));
     }
 
     @GetMapping("/empleado")
@@ -60,13 +57,7 @@ public class EmpleadoRest {
             @ApiResponse(code = 404, message = "Error al ingresar los criterios de busqueda")
     })
     public ResponseEntity<List<Empleado>> buscarEmpleado(@RequestParam(required = false, name= "id") Integer id,@RequestParam(required = false, name= "razonSocial") String razonSocial, @RequestParam(required = false, name= "mail") String mail){
-        Optional<List<Empleado>> listaEmpleadosEncontrados = Optional.of(listaEmpleados
-            .stream()
-            .filter(empleado -> id==null || empleado.getId().equals(id))
-            .filter(empleado -> razonSocial==null || empleado.getRazonSocial().equals(razonSocial))
-            .filter(empleado -> mail==null || empleado.getMail()==null)
-            .collect(Collectors.toList()));
-        return ResponseEntity.of(listaEmpleadosEncontrados);
+        return ResponseEntity.of(empleadoService.buscarEmpleado(id, razonSocial, mail));
     }
 
     @PostMapping
@@ -77,9 +68,7 @@ public class EmpleadoRest {
             @ApiResponse(code = 403, message = "Prohibido")
     })
     public ResponseEntity<Empleado> crearEmpleado(@RequestBody Empleado nuevoEmpleado){
-        nuevoEmpleado.setId(SEQ_ID++);
-        listaEmpleados.add(nuevoEmpleado);
-        return ResponseEntity.ok(nuevoEmpleado);
+        return ResponseEntity.ok(empleadoService.crearEmpleado(nuevoEmpleado));
     }
 
     @PutMapping("/{id}")
@@ -91,15 +80,7 @@ public class EmpleadoRest {
             @ApiResponse(code = 404, message = "El ID no existe")
     })
     public ResponseEntity<Empleado> actualizarEmpleado(@RequestBody Empleado nuevoEmpleado, @PathVariable Integer id){
-        OptionalInt optIndex = IntStream.range(0, listaEmpleados.size())
-                .filter(pos -> listaEmpleados.get(pos).getId().equals(id))
-                .findFirst();
-        if(optIndex.isPresent()){
-            listaEmpleados.set(optIndex.getAsInt(), nuevoEmpleado);
-            return ResponseEntity.ok(nuevoEmpleado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.of(empleadoService.actualizarEmpleado(nuevoEmpleado, id));
     }
 
     @DeleteMapping("/{id}")
@@ -111,13 +92,9 @@ public class EmpleadoRest {
             @ApiResponse(code = 404, message = "El ID no existe")
     })
     public ResponseEntity<Empleado> borrarEmpleado(@PathVariable Integer id){
-        OptionalInt optIndex = IntStream.range(0, listaEmpleados.size())
-                .filter(pos -> listaEmpleados.get(pos).getId().equals(id))
-                .findFirst();
-        if(optIndex.isPresent()){
-            listaEmpleados.remove(optIndex.getAsInt());
+        if(empleadoService.borrarEmpleado(id)){
             return ResponseEntity.ok().build();
-        } else{
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
