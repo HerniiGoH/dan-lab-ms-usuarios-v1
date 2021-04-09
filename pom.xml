@@ -35,6 +35,14 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.21</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -142,12 +150,12 @@
 					</execution>
 				</executions>
 				<configuration>
-					<driver>mysql</driver>
-					<url>jdbc:mysql://localhost:3306/ms_usuarios_db</url>
+					<driver>com.mysql.cj.jdbc.Driver</driver>
+					<url>jdbc:mysql://localhost:3306</url>
 					<user>root</user>
 					<password>root</password>
 					<baselineOnMigrate>true</baselineOnMigrate>
-					<schemas>public</schemas>
+					<schemas>ms_usuarios_db</schemas>
 					<locations>
 						<location>
 							filesystem:src/main/resources/db/migration
@@ -155,7 +163,6 @@
 					</locations>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 
