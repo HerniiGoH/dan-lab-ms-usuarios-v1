@@ -1,7 +1,9 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.implementation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Usuario;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.repositories.UsuarioRepository;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.UsuarioService;
 
 import java.util.ArrayList;
@@ -9,6 +11,8 @@ import java.util.List;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     //lista de los usuarios creados
     private static final List<Usuario> listaUsuarios = new ArrayList<>();
@@ -17,13 +21,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<Usuario> buscartodos() {
-        return listaUsuarios;
+        return usuarioRepository.findAll();
     }
 
     @Override
     public Usuario crearUsuario(Usuario nuevoUsuario) {
-        nuevoUsuario.setId(++SEQ_ID);
-        listaUsuarios.add(nuevoUsuario);
-        return nuevoUsuario;
+        return usuarioRepository.save(nuevoUsuario);
     }
 }

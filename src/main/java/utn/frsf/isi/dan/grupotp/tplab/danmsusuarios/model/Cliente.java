@@ -2,18 +2,24 @@ package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Cliente {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String razonSocial;
     private String cuit;
     private String mail;
     private Double maxCuentaCorriente;
     private Boolean habilitadoOnline;
+    @OneToOne
     private Usuario usuario;
     @JsonBackReference
+    @OneToMany(mappedBy = "cliente")
     private List<Obra> obras;
 
     public Cliente(Integer id, String razonSocial, String cuit, String mail, Double maxCuentaCorriente, Boolean habilitadoOnline, Usuario usuario, List<Obra> obras) {
