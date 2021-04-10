@@ -1,13 +1,21 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JsonParser;
+import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Cliente;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.JsonWrapper;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Obra;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.TipoObra;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.ObraService;
@@ -52,8 +60,8 @@ public class ObraRest {
             @ApiResponse(code = 403, message = "Prohibido"),
             @ApiResponse(code = 404, message = "Error al ingresar los criterios de busqueda")
     })
-    public ResponseEntity<List<Obra>> buscarObra(@RequestParam(required = false, name = "id") Integer id, @RequestParam(required = false, name = "descripcion") String descripcion, @RequestParam(required = false, name = "latitud") Float latitud, @RequestParam(required = false, name = "longitud") Float longitud, @RequestParam(required = false, name = "direccion") String direccion, @RequestParam(required = false, name = "superficie") Integer superficie, @RequestBody(required = false) TipoObra tipoObra, @RequestBody(required = false) Cliente cliente){
-        return ResponseEntity.of(obraService.buscarObra(id, descripcion, latitud, longitud, direccion, superficie, tipoObra, cliente));
+    public ResponseEntity<List<Obra>> buscarObra(@RequestParam(required = false, name = "id") Integer id, @RequestParam(required = false, name = "descripcion") String descripcion, @RequestParam(required = false, name = "latitud") Float latitud, @RequestParam(required = false, name = "longitud") Float longitud, @RequestParam(required = false, name = "direccion") String direccion, @RequestParam(required = false, name = "superficie") Integer superficie, @RequestBody(required = false)JsonWrapper jsonWrapper){
+        return ResponseEntity.of(obraService.buscarObra(id, descripcion, latitud, longitud, direccion, superficie, jsonWrapper.getTipoObra(), jsonWrapper.getCliente()));
     }
 
     @PostMapping

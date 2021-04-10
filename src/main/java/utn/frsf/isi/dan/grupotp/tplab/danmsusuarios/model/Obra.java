@@ -1,11 +1,11 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Obra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,7 @@ public class Obra {
     private Integer superficie;
     @OneToOne
     private TipoObra tipoObra;
-    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     private Cliente cliente;
 

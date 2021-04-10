@@ -1,13 +1,13 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class Cliente {
     private Boolean habilitadoOnline;
     @OneToOne
     private Usuario usuario;
-    @JsonManagedReference
+    @JsonIdentityReference
     @OneToMany(mappedBy = "cliente")
     private List<Obra> obras;
 
