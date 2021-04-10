@@ -1,16 +1,24 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
+import javax.persistence.*;
+
+@Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Obra {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String descripcion;
     private Float latitud;
     private Float longitud;
     private String direccion;
     private Integer superficie;
+    @OneToOne
     private TipoObra tipoObra;
-    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne
     private Cliente cliente;
 
     public Obra(Integer id, String descripcion, Float latitud, Float longitud, String direccion, Integer superficie, TipoObra tipoObra, Cliente cliente) {

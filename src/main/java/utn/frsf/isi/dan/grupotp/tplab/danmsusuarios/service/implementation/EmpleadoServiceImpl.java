@@ -1,61 +1,46 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.implementation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Empleado;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.repositories.EmpleadoRepository;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.EmpleadoService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
-    //lista de los empleados creados
-    private static final List<Empleado> listaEmpleados = new ArrayList<Empleado>();
-    //generador de los id de los empleados
-    private static Integer SEQ_ID = 0;
+    final EmpleadoRepository empleadoRepository;
+    @Autowired
+    public EmpleadoServiceImpl(EmpleadoRepository empleadoRepository) {
+        this.empleadoRepository = empleadoRepository;
+    }
 
     @Override
     public List<Empleado> buscarTodos() {
-        return listaEmpleados;
+        return empleadoRepository.findAll();
     }
 
     @Override
     public Optional<Empleado> buscarEmpleadoPorId(Integer id) {
-        return listaEmpleados
-                .stream()
-                .filter(empleado_aux -> empleado_aux.getId().equals(id))
-                .findFirst();
+        return empleadoRepository.findById(id);
     }
 
     @Override
     public Optional<List<Empleado>> buscarEmpleado(Integer id, String razonSocial, String mail) {
-        return Optional.of(listaEmpleados
-                .stream()
-                .filter(empleado -> id==null || empleado.getId().equals(id))
-                .filter(empleado -> razonSocial==null || empleado.getRazonSocial().equals(razonSocial))
-                .filter(empleado -> mail==null || empleado.getMail()==null)
-                .collect(Collectors.toList()));
+        return empleadoRepository.findAllByQuery(id, razonSocial, mail);
     }
 
     @Override
     public Empleado crearEmpleado(Empleado nuevoEmpleado) {
-        nuevoEmpleado.setId(SEQ_ID++);
-        listaEmpleados.add(nuevoEmpleado);
-        return nuevoEmpleado;
+        return empleadoRepository.save(nuevoEmpleado);
     }
 
     @Override
     public Optional<Empleado> actualizarEmpleado(Empleado nuevoEmpleado, Integer id) {
-        OptionalInt optIndex = IntStream.range(0, listaEmpleados.size())
-                .filter(pos -> listaEmpleados.get(pos).getId().equals(id))
-                .findFirst();
-        if(optIndex.isPresent()) {
-            listaEmpleados.set(optIndex.getAsInt(), nuevoEmpleado);
-            return Optional.of(nuevoEmpleado);
+        if(empleadoRepository.existsById(id)){
+            return Optional.of(empleadoRepository.save(nuevoEmpleado));
         } else {
             return Optional.empty();
         }
@@ -63,11 +48,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public Boolean borrarEmpleado(Integer id) {
-        OptionalInt optIndex = IntStream.range(0, listaEmpleados.size())
-                .filter(pos -> listaEmpleados.get(pos).getId().equals(id))
-                .findFirst();
-        if(optIndex.isPresent()) {
-            listaEmpleados.remove(optIndex.getAsInt());
+        if(empleadoRepository.existsById(id)){
+            empleadoRepository.deleteById(id);
             return true;
         } else {
             return false;

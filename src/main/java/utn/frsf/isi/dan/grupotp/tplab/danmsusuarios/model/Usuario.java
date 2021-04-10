@@ -1,9 +1,15 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model;
 
+import javax.persistence.*;
+
+@Entity
 public class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String user;
     private String password;
+    @OneToOne
     private TipoUsuario tipoUsuario;
 
     public Usuario(Integer id, String user, String password, TipoUsuario tipoUsuario) {
