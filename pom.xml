@@ -39,13 +39,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.200</version>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
@@ -151,9 +144,9 @@
 				</executions>
 				<configuration>
 					<driver>com.mysql.cj.jdbc.Driver</driver>
-					<url>jdbc:mysql://localhost:3306</url>
-					<user>root</user>
-					<password>root</password>
+					<url>jdbc:mysql://localhost:3306/ms_usuarios_db</url>
+					<user>user_usuarios</user>
+					<password>3be43125f05dc87c9b5f27533daf2f01</password>
 					<baselineOnMigrate>true</baselineOnMigrate>
 					<schemas>ms_usuarios_db</schemas>
 					<locations>
