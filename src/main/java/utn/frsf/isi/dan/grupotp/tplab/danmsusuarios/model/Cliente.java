@@ -1,6 +1,7 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,7 +19,7 @@ public class Cliente {
     private Boolean habilitadoOnline;
     @OneToOne
     private Usuario usuario;
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "cliente")
     private List<Obra> obras;
 

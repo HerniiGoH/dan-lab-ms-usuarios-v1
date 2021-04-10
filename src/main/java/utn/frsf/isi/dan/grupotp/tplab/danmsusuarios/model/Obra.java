@@ -1,5 +1,6 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class Obra {
     private Integer superficie;
     @OneToOne
     private TipoObra tipoObra;
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne
     private Cliente cliente;
 

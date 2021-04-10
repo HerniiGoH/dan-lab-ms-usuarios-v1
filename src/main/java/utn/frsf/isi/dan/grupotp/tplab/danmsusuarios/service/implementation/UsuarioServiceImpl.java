@@ -6,18 +6,12 @@ import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Usuario;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.repositories.UsuarioRepository;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.UsuarioService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
-
-    //lista de los usuarios creados
-    private static final List<Usuario> listaUsuarios = new ArrayList<>();
-    //generador de los id de los usuarios
-    private static Integer SEQ_ID = 0;
 
     @Override
     public List<Usuario> buscartodos() {
@@ -27,5 +21,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario crearUsuario(Usuario nuevoUsuario) {
         return usuarioRepository.save(nuevoUsuario);
+    }
+
+    @Override
+    public void borrarUsuario(Integer id) {
+        usuarioRepository.deleteById(id);
     }
 }

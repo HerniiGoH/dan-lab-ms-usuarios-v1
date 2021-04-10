@@ -8,21 +8,13 @@ import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.TipoObra;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.repositories.ObraRepository;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.ObraService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class ObraServiceImpl implements ObraService {
     @Autowired
     ObraRepository obraRepository;
-    //lista de las obras creadas
-    private static final List<Obra> listaObras = new ArrayList<Obra>();
-    //generador de los id de las obras
-    private static Integer SEQ_ID = 0;
 
     @Override
     public List<Obra> buscarTodas() {
@@ -36,7 +28,7 @@ public class ObraServiceImpl implements ObraService {
 
     @Override
     public Optional<List<Obra>> buscarObra(Integer id, String descripcion, Float latitud, Float longitud, String direccion, Integer superficie, TipoObra tipoObra, Cliente cliente) {
-        return obraRepository.findAllByIdAndDescripcionAndLatitudAndLongitudAndDireccionAndSuperficieAndTipoObraAndCliente(id, descripcion, latitud, longitud, direccion, superficie, tipoObra, cliente);
+        return obraRepository.findAllByQuery(id, descripcion, latitud, longitud, direccion, superficie, tipoObra, cliente);
     }
 
     @Override
