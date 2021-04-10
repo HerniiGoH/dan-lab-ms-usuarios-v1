@@ -10,8 +10,11 @@ import java.util.List;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
+    final UsuarioRepository usuarioRepository;
     @Autowired
-    UsuarioRepository usuarioRepository;
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     @Override
     public List<Usuario> buscartodos() {

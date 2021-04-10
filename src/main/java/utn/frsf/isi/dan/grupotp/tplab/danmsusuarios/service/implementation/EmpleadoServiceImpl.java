@@ -11,8 +11,11 @@ import java.util.Optional;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
+    final EmpleadoRepository empleadoRepository;
     @Autowired
-    EmpleadoRepository empleadoRepository;
+    public EmpleadoServiceImpl(EmpleadoRepository empleadoRepository) {
+        this.empleadoRepository = empleadoRepository;
+    }
 
     @Override
     public List<Empleado> buscarTodos() {

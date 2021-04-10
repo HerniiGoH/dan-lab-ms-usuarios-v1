@@ -16,15 +16,20 @@ import java.util.List;
 @RequestMapping("/api/cliente")
 @Api(value="ClienteRest", description = "Permite gestionar los clientes de la empresa")
 public class ClienteRest {
+    final ClienteService clienteService;
     @Autowired
-    ClienteService clienteService;
+    public ClienteRest(ClienteService clienteService) {
+        this.clienteService = clienteService;
+    }
 
     @GetMapping
     @ApiOperation(value = "Devuelve la lista completa de clientes")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Devueltos correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
-            @ApiResponse(code = 403, message = "Prohibido")
+            @ApiResponse(code = 403, message = "Prohibido"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<List<Cliente>> buscarTodos(){
         return ResponseEntity.ok(clienteService.buscarTodos());
@@ -36,7 +41,9 @@ public class ClienteRest {
             @ApiResponse(code = 200, message = "Encontrado correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "El ID no existe")
+            @ApiResponse(code = 404, message = "El ID no existe"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Integer id){
         return ResponseEntity.of(clienteService.buscarClientePorId(id));
@@ -48,7 +55,9 @@ public class ClienteRest {
             @ApiResponse(code = 200, message = "Encontrado(s) correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "Error al ingresar los criterios de busqueda")
+            @ApiResponse(code = 404, message = "Error al ingresar los criterios de busqueda"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<List<Cliente>> buscarCliente(@RequestParam(required = false, name="id") Integer id, @RequestParam(required = false, name="cuit") String cuit, @RequestParam(required = false, name = "razonSocial") String razonSocial, @RequestParam(required = false, name = "mail") String mail, @RequestParam(required = false, name = "maxCuentaCorriente") Double maxCuentaCorriente, @RequestParam(required = false, name = "habilitadoOnline") Boolean habilitadoOnline){
         return ResponseEntity.of(clienteService.buscarCliente(id, cuit, razonSocial, mail, maxCuentaCorriente, habilitadoOnline));
@@ -59,7 +68,9 @@ public class ClienteRest {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Creado correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
-            @ApiResponse(code = 403, message = "Prohibido")
+            @ApiResponse(code = 403, message = "Prohibido"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente nuevoCliente){
         return ResponseEntity.ok(clienteService.crearCliente(nuevoCliente));
@@ -71,7 +82,9 @@ public class ClienteRest {
             @ApiResponse(code = 200, message = "Actualizado) correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "El ID no existe")
+            @ApiResponse(code = 404, message = "El ID no existe"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Cliente> actualizarCliente(@RequestBody Cliente nuevoCliente, @PathVariable Integer id){
         return ResponseEntity.of(clienteService.actualizarCliente(nuevoCliente, id));
@@ -83,7 +96,9 @@ public class ClienteRest {
             @ApiResponse(code = 200, message = "Eliminado correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "El ID no existe")
+            @ApiResponse(code = 404, message = "El ID no existe"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Cliente> borrarCliente(@PathVariable Integer id){
         if(clienteService.borrarCliente(id)){

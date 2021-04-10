@@ -12,10 +12,13 @@ import java.util.Optional;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
+    final ClienteRepository clienteRepository;
+    final UsuarioService usuarioService;
     @Autowired
-    ClienteRepository clienteRepository;
-    @Autowired
-    UsuarioService usuarioService;
+    public ClienteServiceImpl(ClienteRepository clienteRepository, UsuarioService usuarioService) {
+        this.clienteRepository = clienteRepository;
+        this.usuarioService = usuarioService;
+    }
 
     @Override
     public List<Cliente> buscarTodos() {

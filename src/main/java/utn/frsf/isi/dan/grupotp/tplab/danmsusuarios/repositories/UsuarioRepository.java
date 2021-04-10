@@ -9,5 +9,4 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findAll();
     Optional<Usuario> findById(Integer integer);
-    Optional<Usuario> findDistinctByUser(String user);
 }

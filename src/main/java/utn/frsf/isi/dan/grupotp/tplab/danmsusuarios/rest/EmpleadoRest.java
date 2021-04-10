@@ -16,15 +16,20 @@ import java.util.List;
 @RequestMapping("/api/empleado")
 @Api(value = "EmpleadoRest", description = "Permite gestionar los empleados de la empresa")
 public class EmpleadoRest {
+    final EmpleadoService empleadoService;
     @Autowired
-    EmpleadoService empleadoService;
+    public EmpleadoRest(EmpleadoService empleadoService) {
+        this.empleadoService = empleadoService;
+    }
 
     @GetMapping
     @ApiOperation(value = "Devuelve la lista completa de empleados")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Devueltos correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
-            @ApiResponse(code = 403, message = "Prohibido")
+            @ApiResponse(code = 403, message = "Prohibido"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<List<Empleado>> buscarTodos(){
         return ResponseEntity.ok(empleadoService.buscarTodos());
@@ -36,7 +41,9 @@ public class EmpleadoRest {
             @ApiResponse(code = 200, message = "Encontrado correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "El ID no existe")
+            @ApiResponse(code = 404, message = "El ID no existe"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Empleado> buscarEmpleadoPorId(@PathVariable Integer id){
         return ResponseEntity.of(empleadoService.buscarEmpleadoPorId(id));
@@ -48,7 +55,9 @@ public class EmpleadoRest {
             @ApiResponse(code = 200, message = "Encontrado(s) correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "Error al ingresar los criterios de busqueda")
+            @ApiResponse(code = 404, message = "Error al ingresar los criterios de busqueda"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<List<Empleado>> buscarEmpleado(@RequestParam(required = false, name= "id") Integer id,@RequestParam(required = false, name= "razonSocial") String razonSocial, @RequestParam(required = false, name= "mail") String mail){
         return ResponseEntity.of(empleadoService.buscarEmpleado(id, razonSocial, mail));
@@ -59,7 +68,9 @@ public class EmpleadoRest {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Creado correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
-            @ApiResponse(code = 403, message = "Prohibido")
+            @ApiResponse(code = 403, message = "Prohibido"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Empleado> crearEmpleado(@RequestBody Empleado nuevoEmpleado){
         return ResponseEntity.ok(empleadoService.crearEmpleado(nuevoEmpleado));
@@ -71,7 +82,9 @@ public class EmpleadoRest {
             @ApiResponse(code = 200, message = "Actualizado correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "El ID no existe")
+            @ApiResponse(code = 404, message = "El ID no existe"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Empleado> actualizarEmpleado(@RequestBody Empleado nuevoEmpleado, @PathVariable Integer id){
         return ResponseEntity.of(empleadoService.actualizarEmpleado(nuevoEmpleado, id));
@@ -83,7 +96,9 @@ public class EmpleadoRest {
             @ApiResponse(code = 200, message = "Eliminado correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "El ID no existe")
+            @ApiResponse(code = 404, message = "El ID no existe"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Empleado> borrarEmpleado(@PathVariable Integer id){
         if(empleadoService.borrarEmpleado(id)){

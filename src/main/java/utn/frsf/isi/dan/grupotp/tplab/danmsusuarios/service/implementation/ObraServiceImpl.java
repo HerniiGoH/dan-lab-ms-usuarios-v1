@@ -13,8 +13,11 @@ import java.util.Optional;
 
 @Service
 public class ObraServiceImpl implements ObraService {
+    final ObraRepository obraRepository;
     @Autowired
-    ObraRepository obraRepository;
+    public ObraServiceImpl(ObraRepository obraRepository) {
+        this.obraRepository = obraRepository;
+    }
 
     @Override
     public List<Obra> buscarTodas() {

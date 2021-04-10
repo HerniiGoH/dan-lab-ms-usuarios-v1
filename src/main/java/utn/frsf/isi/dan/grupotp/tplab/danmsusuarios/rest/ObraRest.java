@@ -1,23 +1,14 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
-import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Cliente;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.JsonWrapper;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Obra;
-import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.TipoObra;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.ObraService;
 
 import java.util.List;
@@ -26,15 +17,20 @@ import java.util.List;
 @RequestMapping("/api/obra")
 @Api(value = "ObraRest", description = "Permite egstionar las obras de la empresa")
 public class ObraRest {
+    final ObraService obraService;
     @Autowired
-    ObraService obraService;
+    public ObraRest(ObraService obraService) {
+        this.obraService = obraService;
+    }
 
     @GetMapping
     @ApiOperation(value = "Devuelve la lista completa de obras")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Devueltas correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
-            @ApiResponse(code = 403, message = "Prohibido")
+            @ApiResponse(code = 403, message = "Prohibido"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<List<Obra>> buscarTodas(){
         return ResponseEntity.ok(obraService.buscarTodas());
@@ -46,7 +42,9 @@ public class ObraRest {
             @ApiResponse(code = 200, message = "Encontrada correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "El ID no existe")
+            @ApiResponse(code = 404, message = "El ID no existe"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Obra> buscarObraPorId(@PathVariable Integer id){
         return ResponseEntity.of(obraService.buscarObraPorId(id));
@@ -58,7 +56,9 @@ public class ObraRest {
             @ApiResponse(code = 200, message = "Encontrada(s) correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "Error al ingresar los criterios de busqueda")
+            @ApiResponse(code = 404, message = "Error al ingresar los criterios de busqueda"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<List<Obra>> buscarObra(@RequestParam(required = false, name = "id") Integer id, @RequestParam(required = false, name = "descripcion") String descripcion, @RequestParam(required = false, name = "latitud") Float latitud, @RequestParam(required = false, name = "longitud") Float longitud, @RequestParam(required = false, name = "direccion") String direccion, @RequestParam(required = false, name = "superficie") Integer superficie, @RequestBody(required = false)JsonWrapper jsonWrapper){
         return ResponseEntity.of(obraService.buscarObra(id, descripcion, latitud, longitud, direccion, superficie, jsonWrapper.getTipoObra(), jsonWrapper.getCliente()));
@@ -69,7 +69,9 @@ public class ObraRest {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Creada correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
-            @ApiResponse(code = 403, message = "Prohibido")
+            @ApiResponse(code = 403, message = "Prohibido"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Obra> crearObra(@RequestBody Obra nuevaObra){
         return ResponseEntity.ok(obraService.crearObra(nuevaObra));
@@ -81,7 +83,9 @@ public class ObraRest {
             @ApiResponse(code = 200, message = "Actualizada correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "El ID no existe")
+            @ApiResponse(code = 404, message = "El ID no existe"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Obra> actualizarObra(@RequestBody Obra nuevaObra, @PathVariable Integer id){
         return ResponseEntity.of(obraService.actualizarObra(nuevaObra, id));
@@ -93,7 +97,9 @@ public class ObraRest {
             @ApiResponse(code = 200, message = "Eliminada correctamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
             @ApiResponse(code = 403, message = "Prohibido"),
-            @ApiResponse(code = 404, message = "El ID no existe")
+            @ApiResponse(code = 404, message = "El ID no existe"),
+            @ApiResponse(code = 405, message = "Metodo no permitido"),
+            @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Obra> borrarObra (@PathVariable Integer id){
         if(obraService.borrarObra(id)){
