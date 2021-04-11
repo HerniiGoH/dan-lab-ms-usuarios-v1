@@ -5,7 +5,7 @@ Laboratorio de Desarrollo de Aplicaciones en la Nube, microservicio de Usuarios.
 
 ##### Ingresar a mysql desde el cmd (teniendo el servicio corriendo)
 ```
-> mysqld -u root -p
+> mysql -u root -p
 > password: root
 ```
 ##### Crear la base de datos del microservicio
