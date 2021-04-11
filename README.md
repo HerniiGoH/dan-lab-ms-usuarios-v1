@@ -20,16 +20,16 @@ Laboratorio de Desarrollo de Aplicaciones en la Nube, microservicio de Usuarios.
 > exit;
 ```
 ##### Verificar la conexion con la base de datos
-```
+
 1. Abrir IntelliJ.
-2. Ir a la seccion "Database".
-3. Si ya hay un "localhost" creado, modificarlo con las propiedades, caso contrario crear un nuevo "Datasource MySql".
-4. Asignar como enlace de conexion: jdbc:mysql://localhost:3306/ms_usuarios_db.
-5. Asignar usuario 'user_usuarios' y contraseña '3be43125f05dc87c9b5f27533daf2f01'(sin las comillas).
-6. Verificar driver de MysQL 8.21 o superior.
+2. Ir a la seccion `Database`.
+3. Si ya hay un `localhost` creado, modificarlo con las `propiedades`, caso contrario crear un nuevo `Datasource MySql`.
+4. Asignar como enlace de conexion: `jdbc:mysql://localhost:3306/ms_usuarios_db`.
+5. Asignar usuario `user_usuarios` y contraseña `3be43125f05dc87c9b5f27533daf2f01`.
+6. Verificar driver de MysQL `8.21` o superior.
 7. Testear la conexion.
-8. Ir a la pestaña "schemas" y marcar como visible solo el de "ms_usuarios_db".
-```
+8. Ir a la pestaña `schemas` y marcar como visible solo el de `ms_usuarios_db`.
+
 ##### Descargar las dependencias de MySql y JPA al [pom.xml](pom.xml)
 ```
 <dependency>
@@ -105,13 +105,12 @@ spring.datasource.password=3be43125f05dc87c9b5f27533daf2f01
 ```
 Lo ideal es que las etiquetas `<user>` y `<password>` coincidan con el `usuario` y `contraseña` del usuario creado anteriormente. Sino se puede usar el default `root` `root`. La `<url>` es la de la base de datos configurada en [application.properties](src/main/resources/application.properties).
 ##### Realizar la migracion desde IntelliJ
-```
-1. Ir a la pestaña Maven, Plugins, Flyway.
-2. Doble click en el goal "Flyway Clean".
-3. Doble click en el goal "Flyway Migrate".
-4. Alternativamente, se puede realizar un "run" de la aplicacion, pero es mas recomendable con el metodo anterior.
-5. Tambien se pueden ejecutar por consola de IntelliJ los comandos "mvnw flyway:clean" y "mvn flyway:migrate" en ese orden.
-```
+1. Ir a la pestaña `Maven`, `Plugins`, `Flyway`.
+2. Doble click en el goal `Flyway Clean`.
+3. Doble click en el goal `Flyway Migrate`.
+4. Alternativamente, se puede realizar un `run` de la aplicacion, pero es mas recomendable con el metodo anterior.
+5. Tambien se pueden ejecutar por consola de IntelliJ los comandos `mvnw flyway:clean` y `mvnw flyway:migrate` en ese orden.
+
 ##### Deshacer una migracion:
 Se tiene la opcion de hacer un `mvnw flyway:clean` y luego `mvnw flyway:migrate` o se puede eliminar la fila correspondiente a esa version de la tabla `flyway_schema_history`.
 ##### Mas informacion de Flyway:
