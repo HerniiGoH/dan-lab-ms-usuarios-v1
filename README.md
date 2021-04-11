@@ -1,9 +1,14 @@
 # dan-lab-ms-usuarios-v1
 Laboratorio de Desarrollo de Aplicaciones en la Nube, microservicio de Usuarios.
 
-## Pasos para configurar la base de datos (microservicio usuarios)
+##### Requerimientos:
+- Java 8 u 11.
+- MySql Server 8 o superior.
+- IntelliJ Idea Ultimate (Opcional, pero varios de los pasos son explicados usando este IDE).
 
-##### Ingresar a mysql desde el cmd (teniendo el servicio corriendo)
+## Configuracion de la base de datos
+
+##### Ingresar a mysql desde el cmd
 ```
 > mysql -u root -p
 > password: root
@@ -116,3 +121,109 @@ Se tiene la opcion de hacer un `mvnw flyway:clean` y luego `mvnw flyway:migrate`
 ##### Mas informacion de Flyway:
 - [Configure Flyway with Spring Boot](https://medium.com/@tejozarkar/configure-flyway-with-spring-boot-9493aebf336b)
 - [Flyway Documentation](https://flywaydb.org/documentation/)
+
+## Configuracion Inicial de Jenkins:
+##### Agregar las siguientes dependencias al [pom.xml](pom.xml)
+```
+<build>
+      ...
+      <plugins>
+            ...
+                  <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.14.0</version>
+			</plugin>
+
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.2.2</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.5</version>
+				<configuration>
+					<excludeFilterFile>${project.basedir}/exclude-findbugs.xml</excludeFilterFile>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.2</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+                 ...
+      </plugins>
+      ...
+</build>
+...
+<reporting>
+      ...
+      <plugins>
+            ...
+            <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-surefire-report-plugin</artifactId>
+                  <version>3.0.0-M5</version>
+            </plugin>
+            ...
+      </plugins>
+      ...
+</reporting>
+```
+##### Crear el archivo [`Jenkinsfile`](Jenkinsfile) como el que esta de ejemplo.
+##### Descargar el archivo `jenkins.war` del [sitio oficial de Jenkins](https://www.jenkins.io/download/).
+##### Abrir la consola de comando en el directorio donde se descargo el `jenkins.war` y ejecutar el comando:
+```
+java -jar jenkins.war --httpPort=9090
+```
+El puerto puede ser el que uno quiera.
+##### Ingresar desde el navegador al sitio `http://localhost:9090` para terminar la instalacion.
+1. Copiar la `contraseña` que aparece por consola y pegarla como contraseña de administrador.
+2. Saltearse la configuracion de un nuevo usuario, usar admin por defecto.
+3. Instalar los plugins recomendados por defecto.
+##### Configurar la nueva credencial para `github`:
+1. Ir a la seccion `Manage Jenkins`, `Manage Credentials`, seleccionar el dominio `(global)`, `Add Credentials`
+2. __Username__: El nombre de `usuario` de tu cuenta de `github`.
+3. __Password__: El `Token` que hayas creado para Jenkins. Si no tienes un token creado, sigue [estos pasos](https://docs.github.com/es/github/authenticating-to-github/creating-a-personal-access-token) para crear uno con __todos los permisos__.
+4. __Id__: Un identificador para la credencial, puede ser geenrico como `TOKEN_GITHUB` o dejar que lo autocomplete Jenkins.
+5. Descripcion: Opcional, un breve comentario sobre para qué es este token.
+##### Añadir los plugins necesarios:
+1. Volver al `Control Panel`, `Manage Jenkins`, `Manage Plugins`
+2. Ir a la seccion `All Plugins` y buscar los siguientes (instalar sin reiniciar):
+      - `ChuckNorris Plugin`
+      - `HTML Publisher Plugin`
+      - `JaCoCo Plugin`
+      - `Warnings Next Generation Plugin`
+##### Crear una nueva tarea:
+1. Volver al `Control Panel` y clickear en la pestaña `New Task`.
+2. Ponerle el nombre que uno quiera, por ejemplo `DAN-LAB-MS-Usuarios` y seleccionar la opcion `Multibranch Pipeline`.
+3. Opcionalmente, se puede configurar en `Display Name` otro alias para el proyecto, como `Microservicio Usuarios`, y agregar una breve `descripcion`.
+4. En la seccion `Branch Sources` dar la opcion `Add Source` y seleccionar `GitHub`.
+5. Elegir la `credencial` creada en los pasos anteriores para GitHub, pegar la URL del proyecto GitHub y darle al botón `Validate`.
+6. Saltearse el resto de las opciones y clickear `Save`.
+7. Esperar a que se terminen de `buildear` todas las ramas del proyecto, esto puede tomar varios minutos.
