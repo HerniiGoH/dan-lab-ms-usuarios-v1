@@ -40,6 +40,11 @@ public class ObraServiceImpl implements ObraService {
     }
 
     @Override
+    public List<Obra> crearObras(List<Obra> nuevasObras){
+        return obraRepository.saveAll(nuevasObras);
+    }
+
+    @Override
     public Optional<Obra> actualizarObra(Obra nuevaObra, Integer id) {
         if(obraRepository.existsById(id)){
             return Optional.of(obraRepository.save(nuevaObra));

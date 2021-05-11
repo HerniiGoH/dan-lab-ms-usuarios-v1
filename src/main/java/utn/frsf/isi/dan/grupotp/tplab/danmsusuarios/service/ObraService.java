@@ -12,6 +12,7 @@ public interface ObraService {
     Optional<Obra> buscarObraPorId(Integer id);
     Optional<List<Obra>> buscarObra(Integer id, String descripcion, Float latitud, Float longitud, String direccion, Integer superficie, TipoObra tipoObra, Cliente cliente);
     Obra crearObra(Obra nuevaObra);
+    List<Obra> crearObras(List<Obra> nuevasObras);
     Optional<Obra> actualizarObra(Obra nuevaObra, Integer id);
     Boolean borrarObra(Integer id);
 }
