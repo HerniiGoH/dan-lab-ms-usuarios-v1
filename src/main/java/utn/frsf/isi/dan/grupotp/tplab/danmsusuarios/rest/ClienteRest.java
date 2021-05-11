@@ -73,7 +73,10 @@ public class ClienteRest {
             @ApiResponse(code = 500, message = "Error del servidor")
     })
     public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente nuevoCliente){
-        return ResponseEntity.ok(clienteService.crearCliente(nuevoCliente));
+        if(nuevoCliente.getUsuario()!=null && nuevoCliente.getObras()!=null){
+            return ResponseEntity.of(clienteService.crearCliente(nuevoCliente));
+        } else return ResponseEntity.badRequest().build();
+        //TODO devolver un correcto mensaje de error
     }
 
     @PutMapping("/{id}")

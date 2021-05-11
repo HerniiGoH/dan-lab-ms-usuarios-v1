@@ -35,6 +35,7 @@ public class ClienteServiceImpl implements ClienteService {
     public List<Cliente> buscarTodos() {
         return clienteRepository.findAll();
     }
+    //TODO no devolver los que tienen fecha de baja
 
     @Override
     public Optional<Cliente> buscarClientePorId(Integer id) {
@@ -70,9 +71,11 @@ public class ClienteServiceImpl implements ClienteService {
             return Optional.empty();
         }
     }
-
     @Override
     public Boolean borrarCliente(Integer id) {
+        //TODO se les debe asignar una fecha de baja, no ELIMINAR
+        //TODO verificar si tiene pedidos, no se puede "dar de baja" si ya tiene uno
+
         if(clienteRepository.existsById(id)){
             clienteRepository.deleteById(id);
             usuarioService.borrarUsuario(id);
