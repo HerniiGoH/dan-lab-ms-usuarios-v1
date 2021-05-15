@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.enumerations.RiesgoBCRA;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,10 +24,11 @@ public class Cliente {
     @JsonIdentityReference
     @OneToMany(mappedBy = "cliente")
     private List<Obra> obras;
+    @Enumerated(EnumType.STRING)
     private RiesgoBCRA riesgoBCRA;
-    private Date fechaBaja;
+    private LocalDateTime fechaBaja;
 
-    public Cliente(Integer id, String razonSocial, String cuit, String mail, Double maxCuentaCorriente, Boolean habilitadoOnline, Usuario usuario, List<Obra> obras, RiesgoBCRA riesgoBCRA, Date fechaBaja) {
+    public Cliente(Integer id, String razonSocial, String cuit, String mail, Double maxCuentaCorriente, Boolean habilitadoOnline, Usuario usuario, List<Obra> obras, RiesgoBCRA riesgoBCRA, LocalDateTime fechaBaja) {
         this.id = id;
         this.razonSocial = razonSocial;
         this.cuit = cuit;
@@ -115,11 +116,11 @@ public class Cliente {
         this.riesgoBCRA = riesgoBCRA;
     }
 
-    public Date getFechaBaja() {
+    public LocalDateTime getFechaBaja() {
         return fechaBaja;
     }
 
-    public void setFechaBaja(Date fechaBaja) {
+    public void setFechaBaja(LocalDateTime fechaBaja) {
         this.fechaBaja = fechaBaja;
     }
 

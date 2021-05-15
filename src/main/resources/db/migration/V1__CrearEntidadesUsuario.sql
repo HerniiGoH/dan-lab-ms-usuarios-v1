@@ -31,6 +31,8 @@ CREATE TABLE cliente
     max_cuenta_corriente    DOUBLE(19, 2),
     habilitado_online       BOOLEAN            NOT NULL DEFAULT FALSE,
     usuario_id              INTEGER UNSIGNED   NOT NULL,
+    riesgobcra              VARCHAR(40)        NOT NULL,
+    fecha_baja              DATETIME,
     CONSTRAINT fk_usuario_cliente FOREIGN KEY (usuario_id) REFERENCES usuario (id) ON UPDATE CASCADE
 );
 
