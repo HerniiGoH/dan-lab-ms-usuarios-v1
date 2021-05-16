@@ -1,8 +1,14 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Cliente;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.DTO.PedidoDTO;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.Obra;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.enumerations.RiesgoBCRA;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.repositories.ClienteRepository;
@@ -11,11 +17,10 @@ import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.ObraService;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.RiesgoBCRAService;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.UsuarioService;
 
-import java.util.Iterator;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -75,13 +80,31 @@ public class ClienteServiceImpl implements ClienteService {
     public Boolean borrarCliente(Integer id) {
         //TODO se les debe asignar una fecha de baja, no ELIMINAR
         //TODO verificar si tiene pedidos, no se puede "dar de baja" si ya tiene uno
+        Boolean exists = clienteRepository.existsById(id);
+        clienteRepository.findById(id).ifPresent(cliente -> {
+            Optional<Obra> aux = cliente.getObras().stream().filter(obra -> {
+                WebClient webClient = WebClient.create("http://localhost:4041/api/pedido/obra/"+obra.getId());
+                ResponseEntity<List<PedidoDTO>> response = webClient.method(HttpMethod.GET)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .retrieve()
+                        .toEntityList(PedidoDTO.class)
+                        .block();
+                if(response!=null && response.getStatusCode().equals(HttpStatus.OK)){
+                    List<PedidoDTO> pedidos = response.getBody();
+                    assert pedidos != null;
+                    return !pedidos.isEmpty();
+                } else return false;
+            }).findFirst();
 
-        if(clienteRepository.existsById(id)){
-            clienteRepository.deleteById(id);
-            usuarioService.borrarUsuario(id);
-            return true;
-        } else {
-            return false;
-        }
+            if(aux.isPresent()){
+                cliente.setFechaBaja(LocalDateTime.now());
+                clienteRepository.save(cliente);
+            } else {
+                clienteRepository.deleteById(id);
+            }
+
+        });
+
+        return exists;
     }
 }
