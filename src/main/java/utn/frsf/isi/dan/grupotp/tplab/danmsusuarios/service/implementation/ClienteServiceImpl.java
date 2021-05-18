@@ -28,12 +28,13 @@ public class ClienteServiceImpl implements ClienteService {
     final UsuarioService usuarioService;
     final ObraService obraService;
     final RiesgoBCRAService riesgoBCRAService;
+
     @Autowired
     public ClienteServiceImpl(ClienteRepository clienteRepository, UsuarioService usuarioService, ObraService obraService, RiesgoBCRAService riesgoBCRAService) {
         this.clienteRepository = clienteRepository;
         this.usuarioService = usuarioService;
         this.obraService = obraService;
-        this.riesgoBCRAService=riesgoBCRAService;
+        this.riesgoBCRAService = riesgoBCRAService;
     }
 
     @Override
@@ -56,55 +57,56 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Optional<Cliente> crearCliente(Cliente nuevoCliente) {
         nuevoCliente.setRiesgoBCRA(riesgoBCRAService.obtenerRiesgoBCRA(nuevoCliente));
-        if(nuevoCliente.getRiesgoBCRA().equals(RiesgoBCRA.NORMAL) || nuevoCliente.getRiesgoBCRA().equals(RiesgoBCRA.RIESGO_MEDIO)){
-            nuevoCliente.setUsuario(usuarioService.crearUsuario(nuevoCliente.getUsuario()));
-            Cliente clienteCreado = clienteRepository.save(nuevoCliente);
-            for (Obra aux : nuevoCliente.getObras()) {
-                aux.setCliente(clienteCreado);
-            }
-            clienteCreado.setObras(obraService.crearObras(nuevoCliente.getObras()));
-            return Optional.of(clienteCreado);
-        } else return Optional.empty();
+        nuevoCliente.setHabilitadoOnline(nuevoCliente.getRiesgoBCRA().equals(RiesgoBCRA.NORMAL) || nuevoCliente.getRiesgoBCRA().equals(RiesgoBCRA.RIESGO_BAJO));
+        nuevoCliente.getUsuario().setUser(nuevoCliente.getMail());
+        nuevoCliente.getUsuario().setPassword("1234");
+        nuevoCliente.setUsuario(usuarioService.crearUsuario(nuevoCliente.getUsuario()));
+        Cliente clienteCreado = clienteRepository.save(nuevoCliente);
+        for (Obra aux : nuevoCliente.getObras()) {
+            aux.setCliente(clienteCreado);
+        }
+        clienteCreado.setObras(obraService.crearObras(nuevoCliente.getObras()));
+        return Optional.of(clienteCreado);
 
     }
 
     @Override
     public Optional<Cliente> actualizarCliente(Cliente nuevoCliente, Integer id) {
-        if(clienteRepository.existsById(id)){
+        if (clienteRepository.existsById(id)) {
             return Optional.of(clienteRepository.save(nuevoCliente));
         } else {
             return Optional.empty();
         }
     }
+
     @Override
-    public Boolean borrarCliente(Integer id) {
+    public Optional<Cliente> borrarCliente(Integer id) {
         //TODO se les debe asignar una fecha de baja, no ELIMINAR
         //TODO verificar si tiene pedidos, no se puede "dar de baja" si ya tiene uno
-        Boolean exists = clienteRepository.existsById(id);
-        clienteRepository.findById(id).ifPresent(cliente -> {
-            Optional<Obra> aux = cliente.getObras().stream().filter(obra -> {
-                WebClient webClient = WebClient.create("http://localhost:4041/api/pedido/obra/"+obra.getId());
+        Optional<Cliente> clienteEncontrado = clienteRepository.findById(id);
+        if(clienteEncontrado.isPresent()){
+            Optional<Obra> aux = clienteEncontrado.get().getObras().stream().filter(obra -> {
+                WebClient webClient = WebClient.create("http://localhost:4041/api/pedido/obra/" + obra.getId());
                 ResponseEntity<List<PedidoDTO>> response = webClient.method(HttpMethod.GET)
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
                         .toEntityList(PedidoDTO.class)
                         .block();
-                if(response!=null && response.getStatusCode().equals(HttpStatus.OK)){
+                if (response != null && response.getStatusCode().equals(HttpStatus.OK)) {
                     List<PedidoDTO> pedidos = response.getBody();
                     assert pedidos != null;
                     return !pedidos.isEmpty();
                 } else return false;
             }).findFirst();
 
-            if(aux.isPresent()){
-                cliente.setFechaBaja(LocalDateTime.now());
-                clienteRepository.save(cliente);
+            if (aux.isPresent()) {
+                clienteEncontrado.get().setFechaBaja(LocalDateTime.now());
+                clienteRepository.save(clienteEncontrado.get());
             } else {
                 clienteRepository.deleteById(id);
             }
+        }
 
-        });
-
-        return exists;
+        return clienteEncontrado;
     }
 }

@@ -11,5 +11,5 @@ public interface ClienteService {
     Optional<List<Cliente>> buscarCliente(Integer id, String cuit, String razonSocial, String mail, Double maxCuentaCorriente, Boolean habilitadoOnline);
     Optional<Cliente> crearCliente(Cliente nuevoCliente);
     Optional<Cliente> actualizarCliente(Cliente nuevoCliente, Integer id);
-    Boolean borrarCliente(Integer id);
+    Optional<Cliente> borrarCliente(Integer id);
 }

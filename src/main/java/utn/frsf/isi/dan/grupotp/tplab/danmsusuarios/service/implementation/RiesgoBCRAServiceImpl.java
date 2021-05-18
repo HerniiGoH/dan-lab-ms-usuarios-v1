@@ -12,7 +12,7 @@ public class RiesgoBCRAServiceImpl implements RiesgoBCRAService {
 
     @Override
     public RiesgoBCRA obtenerRiesgoBCRA(Cliente cliente) {
-        int randomNum = ThreadLocalRandom.current().nextInt(0, 2);
-        return RiesgoBCRA.values()[randomNum];
+        int randomNum = ThreadLocalRandom.current().nextInt(0, 6);
+        return RiesgoBCRA.values()[0];
     }
 }
