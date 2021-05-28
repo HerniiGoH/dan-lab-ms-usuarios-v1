@@ -59,6 +59,7 @@ public class ClienteServiceImplUnitTest {
     WebClient.ResponseSpec responseSpec;
 
     static List<Cliente> clientes;
+    static List<PedidoDTO> pedidoDTOList;
 
     @BeforeAll
     static void setUp() throws Exception{
@@ -94,6 +95,10 @@ public class ClienteServiceImplUnitTest {
         cliente1.getObras().add(obra1);
 
         clientes.add(cliente1);
+
+        pedidoDTOList = new ArrayList<>();
+        PedidoDTO pedidoDTO = new PedidoDTO();
+        pedidoDTOList.add(pedidoDTO);
     }
 
     @Test
@@ -202,5 +207,28 @@ public class ClienteServiceImplUnitTest {
 
         Mockito.verify(clienteRepository, times(2)).findById(any(Integer.class));
         Mockito.verify(clienteRepository, times(1)).deleteById(any(Integer.class));
+    }
+
+    @Test
+    void testBorrarClienteConIdExistenteyNoExistenteConPedidos(){
+        when(clienteRepository.findById(1)).thenReturn(Optional.of(clientes.get(0)));
+        when(clienteRepository.findById(2)).thenReturn(Optional.empty());
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(clientes.get(0));
+
+        when(webClient.method(any(HttpMethod.class))).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(any(String.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.accept(any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.toEntityList(PedidoDTO.class)).thenReturn(Mono.just(ResponseEntity.of(Optional.of(pedidoDTOList))));
+
+        Optional<Cliente>cliente1 = clienteService.borrarCliente(1);
+        Optional<Cliente>cliente2 = clienteService.borrarCliente(2);
+
+        Assertions.assertTrue(cliente1.isPresent());
+        Assertions.assertNotNull(cliente1.get().getFechaBaja());
+        Assertions.assertFalse(cliente2.isPresent());
+
+        Mockito.verify(clienteRepository, times(2)).findById(any(Integer.class));
+        Mockito.verify(clienteRepository, times(1)).save(any(Cliente.class));
     }
 }
