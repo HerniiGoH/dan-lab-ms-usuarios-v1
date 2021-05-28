@@ -99,8 +99,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     public Optional<Obra> buscarObraPorCliente(Cliente clienteEncontrado){
         return clienteEncontrado.getObras().stream().filter(obra -> {
-            WebClient webClient = WebClient.create("http://localhost:4041/api/pedido/obra/" + obra.getId());
+            //WebClient webClient = WebClient.create("http://localhost:4041/api/pedido/obra/");
             ResponseEntity<List<PedidoDTO>> response = webClient.method(HttpMethod.GET)
+                    .uri(obra.getId().toString())
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .toEntityList(PedidoDTO.class)

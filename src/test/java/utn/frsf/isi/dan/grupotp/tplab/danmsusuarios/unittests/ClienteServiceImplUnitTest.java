@@ -3,12 +3,18 @@ package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.unittests;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.*;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.DTO.PedidoDTO;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.enumerations.RiesgoBCRA;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.repositories.ClienteRepository;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.ObraService;
@@ -36,6 +42,21 @@ public class ClienteServiceImplUnitTest {
     ObraService obraService;
     @MockBean
     RiesgoBCRAService riesgoBCRAService;
+    @MockBean
+    WebClient webClient;
+
+    @Mock
+    WebClient.RequestBodyUriSpec requestBodyUriSpec;
+    @Mock
+    WebClient.RequestBodySpec requestBodySpec;
+    @SuppressWarnings("rawtypes")
+    @Mock
+    WebClient.RequestHeadersSpec requestHeadersSpec;
+    @SuppressWarnings("rawtypes")
+    @Mock
+    WebClient.RequestHeadersUriSpec requestHeadersUriSpec;
+    @Mock
+    WebClient.ResponseSpec responseSpec;
 
     static List<Cliente> clientes;
 
@@ -165,6 +186,12 @@ public class ClienteServiceImplUnitTest {
         when(clienteRepository.findById(1)).thenReturn(Optional.of(clientes.get(0)));
         when(clienteRepository.findById(2)).thenReturn(Optional.empty());
         doNothing().when(clienteRepository).deleteById(1);
+
+        when(webClient.method(any(HttpMethod.class))).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(any(String.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.accept(any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.toEntityList(PedidoDTO.class)).thenReturn(Mono.just(ResponseEntity.of(Optional.empty())));
 
         Optional<Cliente>cliente1 = clienteService.borrarCliente(1);
         Optional<Cliente>cliente2 = clienteService.borrarCliente(2);
