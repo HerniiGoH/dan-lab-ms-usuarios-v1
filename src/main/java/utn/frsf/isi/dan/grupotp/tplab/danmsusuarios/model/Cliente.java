@@ -1,13 +1,15 @@
 package utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model;
 
 import com.fasterxml.jackson.annotation.*;
+import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.model.enumerations.RiesgoBCRA;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = Cliente.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +24,11 @@ public class Cliente {
     @JsonIdentityReference
     @OneToMany(mappedBy = "cliente")
     private List<Obra> obras;
+    @Enumerated(EnumType.STRING)
+    private RiesgoBCRA riesgoBCRA;
+    private LocalDateTime fechaBaja;
 
-    public Cliente(Integer id, String razonSocial, String cuit, String mail, Double maxCuentaCorriente, Boolean habilitadoOnline, Usuario usuario, List<Obra> obras) {
+    public Cliente(Integer id, String razonSocial, String cuit, String mail, Double maxCuentaCorriente, Boolean habilitadoOnline, Usuario usuario, List<Obra> obras, RiesgoBCRA riesgoBCRA, LocalDateTime fechaBaja) {
         this.id = id;
         this.razonSocial = razonSocial;
         this.cuit = cuit;
@@ -32,6 +37,8 @@ public class Cliente {
         this.habilitadoOnline = habilitadoOnline;
         this.usuario = usuario;
         this.obras = obras;
+        this.riesgoBCRA=riesgoBCRA;
+        this.fechaBaja=fechaBaja;
     }
 
     public Cliente() {
@@ -101,16 +108,32 @@ public class Cliente {
         this.obras = obras;
     }
 
+    public RiesgoBCRA getRiesgoBCRA() {
+        return riesgoBCRA;
+    }
+
+    public void setRiesgoBCRA(RiesgoBCRA riesgoBCRA) {
+        this.riesgoBCRA = riesgoBCRA;
+    }
+
+    public LocalDateTime getFechaBaja() {
+        return fechaBaja;
+    }
+
+    public void setFechaBaja(LocalDateTime fechaBaja) {
+        this.fechaBaja = fechaBaja;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cliente cliente = (Cliente) o;
-        return Objects.equals(getId(), cliente.getId()) && Objects.equals(getRazonSocial(), cliente.getRazonSocial()) && Objects.equals(getCuit(), cliente.getCuit()) && Objects.equals(getMail(), cliente.getMail()) && Objects.equals(getMaxCuentaCorriente(), cliente.getMaxCuentaCorriente()) && Objects.equals(getHabilitadoOnline(), cliente.getHabilitadoOnline()) && Objects.equals(getUsuario(), cliente.getUsuario());
+        return getId().equals(cliente.getId()) && getRazonSocial().equals(cliente.getRazonSocial()) && getCuit().equals(cliente.getCuit()) && getMail().equals(cliente.getMail()) && getMaxCuentaCorriente().equals(cliente.getMaxCuentaCorriente()) && getHabilitadoOnline().equals(cliente.getHabilitadoOnline()) && getUsuario().equals(cliente.getUsuario()) && getObras().equals(cliente.getObras()) && getRiesgoBCRA() == cliente.getRiesgoBCRA() && Objects.equals(getFechaBaja(), cliente.getFechaBaja());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getRazonSocial(), getCuit(), getMail(), getMaxCuentaCorriente(), getHabilitadoOnline(), getUsuario());
+        return Objects.hash(getId(), getRazonSocial(), getCuit(), getMail(), getMaxCuentaCorriente(), getHabilitadoOnline(), getUsuario(), getObras(), getRiesgoBCRA(), getFechaBaja());
     }
 }

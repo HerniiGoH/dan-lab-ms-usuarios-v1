@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.*;
 import javax.persistence.*;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = Obra.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Obra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
