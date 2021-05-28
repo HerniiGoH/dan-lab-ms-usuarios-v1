@@ -41,7 +41,6 @@ public class ClienteServiceImpl implements ClienteService {
     public List<Cliente> buscarTodos() {
         return clienteRepository.findAll();
     }
-    //TODO no devolver los que tienen fecha de baja
 
     @Override
     public Optional<Cliente> buscarClientePorId(Integer id) {
@@ -81,23 +80,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Optional<Cliente> borrarCliente(Integer id) {
-        //TODO se les debe asignar una fecha de baja, no ELIMINAR
-        //TODO verificar si tiene pedidos, no se puede "dar de baja" si ya tiene uno
         Optional<Cliente> clienteEncontrado = clienteRepository.findById(id);
         if(clienteEncontrado.isPresent()){
-            Optional<Obra> aux = clienteEncontrado.get().getObras().stream().filter(obra -> {
-                WebClient webClient = WebClient.create("http://localhost:4041/api/pedido/obra/" + obra.getId());
-                ResponseEntity<List<PedidoDTO>> response = webClient.method(HttpMethod.GET)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .retrieve()
-                        .toEntityList(PedidoDTO.class)
-                        .block();
-                if (response != null && response.getStatusCode().equals(HttpStatus.OK)) {
-                    List<PedidoDTO> pedidos = response.getBody();
-                    assert pedidos != null;
-                    return !pedidos.isEmpty();
-                } else return false;
-            }).findFirst();
+            Optional<Obra> aux = buscarObraPorCliente(clienteEncontrado.get());
 
             if (aux.isPresent()) {
                 clienteEncontrado.get().setFechaBaja(LocalDateTime.now());
@@ -108,5 +93,21 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         return clienteEncontrado;
+    }
+
+    private Optional<Obra> buscarObraPorCliente(Cliente clienteEncontrado){
+        return clienteEncontrado.getObras().stream().filter(obra -> {
+            WebClient webClient = WebClient.create("http://localhost:4041/api/pedido/obra/" + obra.getId());
+            ResponseEntity<List<PedidoDTO>> response = webClient.method(HttpMethod.GET)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .toEntityList(PedidoDTO.class)
+                    .block();
+            if (response != null && response.getStatusCode().equals(HttpStatus.OK)) {
+                List<PedidoDTO> pedidos = response.getBody();
+                assert pedidos != null;
+                return !pedidos.isEmpty();
+            } else return false;
+        }).findFirst();
     }
 }
