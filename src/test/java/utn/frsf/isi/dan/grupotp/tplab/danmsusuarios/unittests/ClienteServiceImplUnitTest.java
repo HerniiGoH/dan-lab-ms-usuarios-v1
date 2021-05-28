@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class ClienteServiceImplUnitTest {
-    @MockBean
+    @Autowired
     ClienteServiceImpl clienteService;
     @MockBean
     ClienteRepository clienteRepository;
@@ -76,8 +76,7 @@ public class ClienteServiceImplUnitTest {
 
     @Test
     void testBuscarTodos(){
-        when(clienteRepository.findAll()).thenReturn(clientes);
-
+        when(clienteRepository.findAll()).thenReturn(new ArrayList<>(clientes));
         List<Cliente> clientesEncontrados = clienteService.buscarTodos();
         Assertions.assertEquals(clientesEncontrados.size(), 1);
         Mockito.verify(clienteRepository,times(1)).findAll();
