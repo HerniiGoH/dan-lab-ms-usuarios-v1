@@ -18,6 +18,7 @@ import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.RiesgoBCRAService;
 import utn.frsf.isi.dan.grupotp.tplab.danmsusuarios.service.UsuarioService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -74,7 +75,10 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Optional<Cliente> actualizarCliente(Cliente nuevoCliente, Integer id) {
         if (clienteRepository.existsById(id)) {
-            return Optional.of(clienteRepository.save(nuevoCliente));
+            nuevoCliente.getUsuario().setUser(nuevoCliente.getMail());
+            Cliente clienteGuardado = clienteRepository.save(nuevoCliente);
+            clienteGuardado.setObras(obraService.buscarObra(null,null,null,null,null,null,null,clienteGuardado).orElse(new ArrayList<>()));
+            return Optional.of(clienteGuardado);
         } else {
             return Optional.empty();
         }

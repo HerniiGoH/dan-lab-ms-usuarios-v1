@@ -28,7 +28,7 @@ CREATE TABLE cliente
     razon_social         VARCHAR(100)       NOT NULL,
     cuit                 VARCHAR(11) UNIQUE NOT NULL,
     mail                 VARCHAR(50) UNIQUE NOT NULL,
-    max_cuenta_corriente DOUBLE(19, 2),
+    max_cuenta_corriente DOUBLE,
     habilitado_online    BOOLEAN            NOT NULL DEFAULT FALSE,
     usuario_id           INTEGER UNSIGNED   NOT NULL,
     riesgobcra           VARCHAR(40)        NOT NULL,

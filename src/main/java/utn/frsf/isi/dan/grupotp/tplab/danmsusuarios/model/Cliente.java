@@ -19,7 +19,7 @@ public class Cliente {
     private String mail;
     private Double maxCuentaCorriente;
     private Boolean habilitadoOnline;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Usuario usuario;
     @JsonIdentityReference
     @OneToMany(mappedBy = "cliente")
