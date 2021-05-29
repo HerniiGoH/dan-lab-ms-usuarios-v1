@@ -28,13 +28,15 @@ public class ClienteServiceImpl implements ClienteService {
     final UsuarioService usuarioService;
     final ObraService obraService;
     final RiesgoBCRAService riesgoBCRAService;
+    final WebClient webClient;
 
     @Autowired
-    public ClienteServiceImpl(ClienteRepository clienteRepository, UsuarioService usuarioService, ObraService obraService, RiesgoBCRAService riesgoBCRAService) {
+    public ClienteServiceImpl(ClienteRepository clienteRepository, UsuarioService usuarioService, ObraService obraService, RiesgoBCRAService riesgoBCRAService, WebClient webClient) {
         this.clienteRepository = clienteRepository;
         this.usuarioService = usuarioService;
         this.obraService = obraService;
         this.riesgoBCRAService = riesgoBCRAService;
+        this.webClient = webClient;
     }
 
     @Override
@@ -95,10 +97,11 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteEncontrado;
     }
 
-    private Optional<Obra> buscarObraPorCliente(Cliente clienteEncontrado){
+    public Optional<Obra> buscarObraPorCliente(Cliente clienteEncontrado){
         return clienteEncontrado.getObras().stream().filter(obra -> {
-            WebClient webClient = WebClient.create("http://localhost:4041/api/pedido/obra/" + obra.getId());
+            //WebClient webClient = WebClient.create("http://localhost:4041/api/pedido/obra/");
             ResponseEntity<List<PedidoDTO>> response = webClient.method(HttpMethod.GET)
+                    .uri(obra.getId().toString())
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .toEntityList(PedidoDTO.class)
